@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito de Compras</title>
+   <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>Tienda Virtual con JS</h1>
+
+<h2>Productos</h2>
+<div id="products">
+    <button onclick="addToCart('leche ', 100)">Agregar leche</button>
+    <button onclick="addToCart('arroz', 25)">Agregar arroz </button>
+    <button onclick="addToCart('menestra', 74)">Agregar menestra</button>
+    <button onclick="addToCart('cebolla ', 45)">Agregar  cebolla </button>
+    <button onclick="addToCart('tomate', 23)">Agregar tomate  </button>
+    <button onclick="addToCart('papas', 78)">Agregar papas </button>
+</div>
+
+<h2>Carrito de Compras JS</h2>
+<div id="cart"></div>
+<button onclick="calculateTotal()">Calcular Total</button>
+
+<script>
+    let cart = [];
+
+    function addToCart(productName, productPrice) {
+        cart.push({ name: productName, price: productPrice });
+        displayCart();
+    }
+
+    function removeFromCart(index) {
+        cart.splice(index, 1);
+        displayCart();
+    }
+
+    function displayCart() {
+        const cartDiv = document.getElementById('cart');
+        cartDiv.innerHTML = '';
+
+        if (cart.length === 0) {
+            cartDiv.innerHTML = 'El carrito está vacío.';
+            return;
+        }
+
+        cart.forEach((item, index) => {
+            cartDiv.innerHTML += `${item.name} - $${item.price} <button onclick="removeFromCart(${index})">Eliminar</button><br>`;
+        });
+    }
+
+    function calculateTotal() {
+        let subtotal1 = cart.reduce((total, item) => total + item.price, 0);
+        let discount = subtotal1 > 3000 ? subtotal1 * 0.10 : 0;
+        let subtotal2 = subtotal1 - discount;
+        let igv = subtotal2 * 0.18;
+        let total = subtotal2 + igv;
+
+        displayCalculation(subtotal1, discount, subtotal2, igv, total);
+    }
+
+    function displayCalculation(subtotal1, discount, subtotal2, igv, total) {
+        const cartDiv = document.getElementById('cart');
+        cartDiv.innerHTML += `
+            <h3>Cálculo del Total de tu compra </h3>
+            Subtotal 1: $${subtotal1.toFixed(2)}<br><br> //suma de productos
+            Descuento: $${discount.toFixed(2)}<br><br> //mayor a 3000
+            Subtotal 2: $${subtotal2.toFixed(2)}<br><br>
+            IGV (18%): $${igv.toFixed(2)}<br><br>
+            <strong>Total a Pagar: $${total.toFixed(2)}</strong><br><br>
+        `;
+    }
+</script>
+
+</body>
+</html>
